@@ -1,0 +1,55 @@
+vpc-project/
+├── main.tf
+├── variables.tf
+├── outputs.tf
+├── terraform.tfvars
+├── provider.tf
+├── modules/
+│   └── vpc/
+│       ├── main.tf
+│       ├── variables.tf
+│       ├── outputs.tf
+
+
+🔨 modules/vpc/main.tf
+This is where the actual AWS infrastructure is provisioned:
+
+✅ Core Resources
+Resource	                        What It Does
+aws_vpc.main	                    Creates the main VPC with DNS enabled
+aws_internet_gateway.igw	        Attaches an Internet Gateway to the VPC
+
+🌐 Subnets
+Resource	                        Description
+aws_subnet.public	                Creates each public subnet in a given AZ
+aws_subnet.private	                Creates each private subnet in a given AZ
+
+🚦 Routing
+Resource	                        Description
+aws_route_table.public	            Creates route table with default route to Internet Gateway
+aws_route_table_association.public	Associates each public subnet with the public route table
+
+🔐 Security Group
+Resource	                        Description
+aws_security_group.default	        Allows incoming SSH (22), HTTP (80), HTTPS (443), and all outbound
+
+
+📝 Flow Logs (Optional)
+Resource	                                         Description
+aws_cloudwatch_log_group.vpc_flow_logs	             Creates log group for VPC Flow Logs
+aws_iam_role.flow_logs_role	                         IAM role to allow VPC Flow Logs to write to CloudWatch
+aws_iam_role_policy_attachment.flow_logs_attach	     Attaches policy to role
+aws_flow_log.vpc_logs	                             Captures all traffic in the VPC to CloudWatch Logs
+
+
+
+📤 modules/vpc/outputs.tf
+These export the IDs of important resources for use in the root module or other modules:
+
+Output                    Name	Value
+vpc_id	                  ID of the created VPC
+public_subnet_ids	      List of public subnet IDs
+private_subnet_ids	      List of private subnet IDs
+igw_id	                  Internet Gateway ID
+security_group_id	      Default Security Group ID
+vpc_flow_log_id	VPC       Flow Log resource ID (optional)
