@@ -10,3 +10,4 @@
 
 # tfvars (if sensitive)
 *.tfvars
+*.gitignore.swp
